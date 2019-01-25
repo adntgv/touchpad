@@ -4,11 +4,12 @@ import SocketServer
 
 class MyTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
-        self.data = self.request.recv(1024).strip()
-        info = json.loads(self.data[2:])
-        vx = info['vx']
-        vy = info['vy']
-        m.move(vx,vy,absolute=False)
+        data = self.request.recv(1024).strip()
+        print data
+        #info = json.loads(self.data[2:])
+        #vx = info['vx']
+        #vy = info['vy']
+        #m.move(vx,vy,absolute=False)
         print "\n"
         
         #m.move(x,y, absolute=False, duration=0)
