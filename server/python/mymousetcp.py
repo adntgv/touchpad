@@ -1,22 +1,27 @@
 import mouse as m
 import json
-import SocketServer
+from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
-class MyTCPHandler(SocketServer.BaseRequestHandler):
-    def handle(self):
-        self.data = self.request.recv(1024).strip()
-        info = json.loads(self.data[2:])
-        vx = info['vx']
-        vy = info['vy']
-        m.move(vx,vy,absolute=False)
+class MyTCPHandler(WebSocket):
+    def handleMessage(self):
+        data = self.data
+        print data
+        if "{" in data:
+            info = json.loads(data)
+            vx = info['vx']
+            vy = info['vy']
+            m.move(vx,vy,absolute=False,duration=0)
         print "\n"
-        
-        #m.move(x,y, absolute=False, duration=0)
+
+    def handleConnected(self):
+        print(self.address, 'connected')
+
+    def handleClose(self):
+        print(self.address, 'closed')
 
 if __name__ == "__main__":
     HOST, PORT = "10.6.85.68", 7000
-
-    server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
-    server.serve_forever()
+    server = SimpleWebSocketServer(HOST, PORT, MyTCPHandler)
+    server.serveforever()
     
     
