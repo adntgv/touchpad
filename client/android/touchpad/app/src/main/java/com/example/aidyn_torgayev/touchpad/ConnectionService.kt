@@ -1,9 +1,16 @@
 package com.example.aidyn_torgayev.touchpad
 
+import android.annotation.SuppressLint
 import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import org.json.JSONObject
 import java.io.DataOutputStream
 import java.net.Socket
+import java.util.*
+import java.util.concurrent.Semaphore
+
 /*
 * TCP Sender Simple
 * */
@@ -26,4 +33,3 @@ class TCPSender: AsyncTask<Float,Void,Void>() {
         return null
     }
 }
-
