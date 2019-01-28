@@ -50,6 +50,9 @@ func echo(w http.ResponseWriter, r *http.Request) {
 			x, y := robotgo.GetMousePos()
 			robotgo.Move(x+int(m.Vx), y+int(m.Vy))
 		}
+		if strings.EqualFold(string(message), "tap") {
+			robotgo.MouseClick()
+		}
 	}
 }
 
