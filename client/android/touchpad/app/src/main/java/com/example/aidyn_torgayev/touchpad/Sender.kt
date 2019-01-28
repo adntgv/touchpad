@@ -25,11 +25,12 @@ class WebSocketSender(serverUri: URI?) : WebSocketClient(serverUri) {
         println("Connection is established")
     }
 
-    fun sendMouse(vararg params: Float) {
-        if (isClosed) {
-            connect()
-        }
-        send(Mouse(params[0],params[1]).toString())
+    fun sendMouse(vararg params: Float?) {
+        send(Mouse(params[0]!!,params[1]!!).toString())
+    }
+
+    fun tap(){
+        send("tap")
     }
 }
 
