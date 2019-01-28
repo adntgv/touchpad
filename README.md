@@ -6,10 +6,9 @@ https://pypi.org/project/mouse/
 
 
 TODO:
-* Insert IP
+* Auto Discovery
+* R Click / Scroll
+* Gyro/Accel Support
 * QR connection
 * ...
 * USB Support
-* L/R Click / Scroll Detection
-* Auto Discovery
-* Gyro/Accel Support
