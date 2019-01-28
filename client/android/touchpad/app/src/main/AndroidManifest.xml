@@ -19,12 +19,6 @@
             </intent-filter>
         </activity>
 
-        <service
-                android:name=".Sender"
-                android:enabled="true"
-                android:exported="true">
-        </service>
-
         <activity android:name=".Touchpad">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
