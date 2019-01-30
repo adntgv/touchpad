@@ -41,12 +41,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"/>
-    <EditText
-            android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/val_sensitivity"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="46dp" app:layout_constraintEnd_toEndOf="parent" android:text="50"/>
+            android:id="@+id/textInputLayout3" android:layout_marginTop="45dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp">
+
+        <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="sensitivity" android:id="@+id/val_sensitivity" android:text="80"/>
+    </android.support.design.widget.TextInputLayout>
 </android.support.constraint.ConstraintLayout>

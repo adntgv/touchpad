@@ -14,18 +14,16 @@ class Configure : AppCompatActivity() {
         setContentView(R.layout.activity_configure)
 
         val button = findViewById<Button>(R.id.btn_connect)
-        button.setOnClickListener(object: View.OnClickListener {
-            override fun onClick(v: View?) {
-                val bundle = Bundle()
-                bundle.putInt("sensitivity", val_sensitivity.text.toString().toInt())
-                bundle.putString("ip", val_ip.text.toString())
-                bundle.putString("port", val_port.text.toString())
+        button.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putInt("sensitivity", val_sensitivity.text.toString().toInt())
+            bundle.putString("ip", val_ip.text.toString())
+            bundle.putString("port", val_port.text.toString())
 
-                val intent = Intent(this@Configure, Touchpad::class.java).apply {
-                    putExtra("data", bundle)
-                }
-                startActivity(intent)
+            val intent = Intent(this@Configure, Touchpad::class.java).apply {
+                putExtra("data", bundle)
             }
-        })
+            startActivity(intent)
+        }
     }
 }

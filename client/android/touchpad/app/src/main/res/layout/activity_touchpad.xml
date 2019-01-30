@@ -6,32 +6,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Touchpad">
-
     <TextView
-            android:text="vx"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vxl" android:layout_marginTop="50dp"
-            app:layout_constraintEnd_toEndOf="@+id/vx" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="58dp" android:layout_marginEnd="59dp"/>
-    <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vx" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="49dp"
-            android:layout_marginStart="123dp"/>
-    <TextView
-            android:text="vy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vyl" app:layout_constraintStart_toStartOf="@+id/vxl"
-            android:layout_marginTop="26dp" app:layout_constraintTop_toBottomOf="@+id/vxl"/>
-    <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/vy" app:layout_constraintStart_toStartOf="@+id/vx"
-            android:layout_marginTop="27dp" app:layout_constraintTop_toBottomOf="@+id/vx"/>
+            android:text="TextView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/text_field" android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="10dp" android:layout_marginEnd="10dp"/>
 </android.support.constraint.ConstraintLayout>
