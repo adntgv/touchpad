@@ -14,7 +14,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class UDPSender : Service() {
-    val queue:BlockingQueue<JSONObject> = LinkedBlockingQueue<JSONObject>()
+    val queue:BlockingQueue<MotionEvent> = LinkedBlockingQueue<MotionEvent>()
     private val mBinder = UDPSenderBinder()
     private lateinit var ip: InetAddress
     private var port:Int = 0
@@ -42,46 +42,7 @@ class UDPSender : Service() {
     }
 
     fun send(e:MotionEvent){
-        when (e.action) {
-            MotionEvent.ACTION_MOVE -> {
-                velocity?.addMovement(e)
-                velocity?.computeCurrentVelocity(sensitivity)
-                vx = velocity?.xVelocity
-                vy = velocity?.yVelocity
-                move()
-            }
-            MotionEvent.ACTION_DOWN -> {
-                x = e.x
-                y = e.y
-            }
-            MotionEvent.ACTION_UP -> {
-                if (e.x == x && e.y == y) {
-                    tap()
-                }
-            }
-        }
-    }
-
-    private fun tap(){
-        queue.offer(Mouse("tap",vx,vy).toJSON())
-    }
-
-    private fun move(){
-        if (vy != 0.0f && vx != 0.0f) {
-            queue.offer(Mouse("move",vx,vy).toJSON())
-        }
-    }
-
-    private fun doubleTap(){
-        TODO()
-    }
-
-    private fun drag(){
-        TODO()
-    }
-
-    private fun scroll(){
-        TODO()
+        queue.offer(e)
     }
 
     private val localSender: Runnable = object : Runnable {
@@ -104,18 +65,5 @@ class UDPSender : Service() {
                 }
             }
         }
-    }
-}
-
-class Mouse (private val action: String, private val vx:Float?, private val vy: Float?) {
-    private val data = JSONObject()
-    fun toJSON(): JSONObject{
-        data.put("action", action)
-        data.put("vx", vx)
-        data.put("vy", vy)
-        return data
-    }
-    override fun toString(): String {
-        return toJSON().toString()
     }
 }
