@@ -18,7 +18,7 @@ class Configure : AppCompatActivity() {
             val bundle = Bundle()
             bundle.putInt("sensitivity", val_sensitivity.text.toString().toInt())
             bundle.putString("ip", val_ip.text.toString())
-            bundle.putString("port", val_port.text.toString())
+            bundle.putInt("port", val_port.text.toString().toInt())
 
             val intent = Intent(this@Configure, Touchpad::class.java).apply {
                 putExtra("data", bundle)
