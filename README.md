@@ -6,10 +6,6 @@ https://pypi.org/project/mouse/
 
 
 TODO:
-* Port to protobuf
-* Auto Discovery
-* R Click / Scroll
-* Gyro/Accel Support
-* QR connection
-* ...
-* USB Support
+* Auto Connection
+* Scroll
+  * Gyro/Accel Support
