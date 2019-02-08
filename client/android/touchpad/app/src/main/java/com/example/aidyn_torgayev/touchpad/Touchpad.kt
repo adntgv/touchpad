@@ -33,7 +33,6 @@ class Touchpad : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         val data = intent.getBundleExtra("data")
 
         val intent = Intent(this, UDPSender::class.java).apply {
@@ -57,8 +56,17 @@ class Touchpad : AppCompatActivity() {
 
 
     private fun log(str: String){
-        //val prev = text_field.text
         text_field.text = str
+    }
+
+    override fun onDestroy() {
+        if (mBound) {
+            unbindService(mConnection)
+            mBound = false
+        }
+        val intent = Intent(this, UDPSender::class.java)
+        stopService(intent)
+        super.onDestroy()
     }
 
 }

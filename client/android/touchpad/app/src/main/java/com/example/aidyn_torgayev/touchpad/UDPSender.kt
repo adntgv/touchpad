@@ -17,14 +17,8 @@ class UDPSender : Service() {
     val queue:BlockingQueue<MotionEvent> = LinkedBlockingQueue<MotionEvent>()
     private val mBinder = UDPSenderBinder()
     private lateinit var ip: InetAddress
+    private var threadRunning = true
     private var port:Int = 0
-
-    private val velocity: VelocityTracker? = VelocityTracker.obtain()
-    private var x: Float = 0.0f
-    private var y: Float = 0.0f
-    private var vx: Float? = 0.0f
-    private var vy: Float? = 0.0f
-    private var sensitivity = 0
 
     inner class UDPSenderBinder : Binder() {
         fun getService() :  UDPSender {
@@ -36,9 +30,18 @@ class UDPSender : Service() {
         val data = intent.getBundleExtra("data")
         ip = InetAddress.getByName(data.getString("ip"))
         port = data.getInt("port")
-        sensitivity = data.getInt("sensitivity")
         Thread(localSender).start()
         return mBinder
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        onDestroy()
+        return super.onUnbind(intent)
+    }
+
+    override fun onDestroy() {
+        threadRunning = false
+        super.onDestroy()
     }
 
     fun send(e:MotionEvent){
@@ -47,12 +50,11 @@ class UDPSender : Service() {
 
     private val localSender: Runnable = object : Runnable {
         private val clientSocket = DatagramSocket()
-        private var running = true
-        private lateinit var sendData:ByteArray
-        private lateinit var sendPacket: DatagramPacket
+        private var sendData:ByteArray = "".toByteArray()
+        private var sendPacket: DatagramPacket = DatagramPacket(sendData, sendData.size)
         override fun run() {
             clientSocket.broadcast = true;
-            while (running) {
+            while (threadRunning) {
                 val data = queue.poll()
                 if (data != null) {
                     sendData = data.toString().toByteArray()
