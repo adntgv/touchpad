@@ -36,7 +36,7 @@ struct MouseEvent {
     y: f64,
     event_time: i64,
     down_time: i64,
-    mul: i64,
+    mul: i32,
     pressed: bool,
 }
 
@@ -52,7 +52,7 @@ fn new() -> MouseEvent {
             y: 0.0,
             event_time: 0,
             down_time: 0,
-            mul: 0,
+            mul: 1,
             pressed: false,
         }
     }
@@ -92,17 +92,18 @@ impl MouseEvent {
                     _ => continue,
                 };
             }
-            println!("{:?}", self);
             self._do();
         }
     }
+    
     fn _do(&mut self) {
         
         println!("doing");
         let mut enigo = Enigo::new();
         self.dx = self.x - self.px;
         self.dy = self.y - self.py; 
-        
+        self.mul = (self.dx.powf(2.0) + self.dy.powf(2.0)).cbrt()  as i32;
+        println!("{}", self.mul);
         match self.paction {
             Action::DOWN => {
                 match self.action {
@@ -130,7 +131,7 @@ impl MouseEvent {
                             }
                         }
                         println!("Mouse move");
-                        enigo.mouse_move_relative(self.dx as i32, self.dy as i32);
+                        enigo.mouse_move_relative(self.mul * self.dx as i32, self.mul * self.dy as i32);
                         return;
                         }
 
@@ -145,7 +146,7 @@ impl MouseEvent {
                     },
                     Action::MOVE => {
                         println!("Mouse move");
-                        enigo.mouse_move_relative(self.dx as i32, self.dy as i32);
+                        enigo.mouse_move_relative(self.mul * self.dx as i32, self.mul * self.dy as i32);
                     },
                     _ => return,
                 }
@@ -178,9 +179,9 @@ fn main() -> std::io::Result<()> {
     let mut mouse = new();
     loop {
         match socket.recv_from(&mut buf) {
-            Ok((_amt, _src)) => {
+            Ok((amt, _src)) => {
                 let msg = str::from_utf8(&buf).unwrap_or("");
-                mouse.act(msg.to_string());
+                mouse.act(msg[..amt].to_string());
                 },
             Err(e) => {
                 println!("couldn't recieve a datagram: {}", e);
