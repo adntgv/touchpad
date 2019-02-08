@@ -16,7 +16,6 @@ class Configure : AppCompatActivity() {
         val button = findViewById<Button>(R.id.btn_connect)
         button.setOnClickListener {
             val bundle = Bundle()
-            bundle.putInt("sensitivity", val_sensitivity.text.toString().toInt())
             bundle.putString("ip", val_ip.text.toString())
             bundle.putInt("port", val_port.text.toString().toInt())
 

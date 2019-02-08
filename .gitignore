@@ -1,2 +1,3 @@
 *.exe
 *.pyc
+server/rust/server/target/

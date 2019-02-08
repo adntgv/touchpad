@@ -73,8 +73,8 @@ class MouseEvent:
                     m.move( self.mul * self.dx, self.mul * self.dy, absolute=False)
                     return
                 if self.action == "ACTION_UP":
-                    self.vx = 0
-                    self.vy = 0
+                    self.dx = 0
+                    self.dy = 0
 
 def debug(message):
     if DEBUG:
