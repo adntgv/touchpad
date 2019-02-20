@@ -5,3 +5,4 @@ authors = ["Aidyn Torgayev <right-hearted@yandex.ru>"]
 
 [dependencies]
 enigo = "0.0.12"
+ctrlc = "3.1.1"
