@@ -1,3 +1,4 @@
 *.exe
 *.pyc
 server/rust/server/target/
+server/rust/server/Cargo.lock

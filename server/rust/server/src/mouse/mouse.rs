@@ -96,26 +96,21 @@ impl MouseEvent {
     }
     
     fn _do(&mut self) {
-        println!("doing");
         let mut enigo = Enigo::new();
         self.dx = self.x - self.px;
         self.dy = self.y - self.py; 
-        self.mul = (self.dx.powf(2.0) + self.dy.powf(2.0)).cbrt().ln()  as i32;
-        println!("{}", self.mul);
+        self.mul = (self.dx.powf(2.0) + self.dy.powf(2.0)).sqrt().ln() as i32;
         match self.paction {
             Action::DOWN => {
                 match self.action {
                     Action::UP => {
                         if self.pressed {
-                            println!("Mouse up");
                             enigo.mouse_up(MouseButton::Left);
                             return
                         }
                         if self.event_time - self.down_time < LONG_TAP_TIMEOUT{
-                            println!("Click left");
                             enigo.mouse_click(MouseButton::Left)
                         } else {
-                            println!("Click right");
                             enigo.mouse_click(MouseButton::Right)
                         }
                         return
@@ -123,12 +118,10 @@ impl MouseEvent {
                     Action::MOVE => {
                         if self.event_time - self.down_time > DRAG_TIMEOUT {
                             if !self.pressed {
-                                println!("Mouse down");
                                 enigo.mouse_down(MouseButton::Left);
                                 return
                             }
                         }
-                        println!("Mouse move");
                         enigo.mouse_move_relative(self.mul * self.dx as i32, self.mul * self.dy as i32);
                         return;
                         }
@@ -143,7 +136,6 @@ impl MouseEvent {
                         self.dy = 0.0;
                     },
                     Action::MOVE => {
-                        println!("Mouse move");
                         enigo.mouse_move_relative(self.mul * self.dx as i32, self.mul * self.dy as i32);
                     },
                     _ => return,
