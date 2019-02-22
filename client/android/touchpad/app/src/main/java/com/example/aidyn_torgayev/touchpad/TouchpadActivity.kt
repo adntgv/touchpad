@@ -15,7 +15,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 
-class Touchpad : AppCompatActivity() {
+class TouchpadActivity : AppCompatActivity() {
     var mBound: Boolean = false
     var s: UDPSender? = null
     private var mConnection:ServiceConnection = object :ServiceConnection {

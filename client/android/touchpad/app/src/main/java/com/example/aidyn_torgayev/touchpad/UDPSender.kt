@@ -14,7 +14,7 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class UDPSender : Service() {
-    val queue:BlockingQueue<MotionEvent> = LinkedBlockingQueue<MotionEvent>()
+    val queue:BlockingQueue<TouchpadOuterClass.Touchpad> = LinkedBlockingQueue<TouchpadOuterClass.Touchpad>()
     private val mBinder = UDPSenderBinder()
     private lateinit var ip: InetAddress
     private var threadRunning = true
@@ -45,7 +45,44 @@ class UDPSender : Service() {
     }
 
     fun send(e:MotionEvent){
-        queue.offer(e)
+        val touch: TouchpadOuterClass.Touchpad = convertToTouchpad(e)
+        queue.offer(touch)
+    }
+
+    private fun convertToTouchpad(e: MotionEvent): TouchpadOuterClass.Touchpad {
+        val touchBuilder =  TouchpadOuterClass.Touchpad.newBuilder()
+        touchBuilder.action = getAction(e)
+        touchBuilder.eventTime = e.eventTime
+        touchBuilder.downTime = e.downTime
+        if (e.pointerCount > 1) {
+            val positions: Array<Array<Double>> = getPositions(e)
+            touchBuilder.addAllX(positions[0].toMutableList())
+            touchBuilder.addAllY(positions[1].toMutableList())
+        } else {
+            touchBuilder.addX(e.x.toDouble())
+            touchBuilder.addY(e.y.toDouble())
+        }
+        return touchBuilder.build()
+    }
+
+    private fun getPositions(e: MotionEvent): Array<Array<Double>> {
+        val count = e.pointerCount
+        val ps: Array<Array<Double>> = Array(2) { Array(count) {0.0} }
+        for (i in 0..count) {
+            ps[0][i] = e.getX(i).toDouble()
+            ps[1][i] = e.getY(i).toDouble()
+        }
+        return ps
+    }
+
+    private fun getAction(e:MotionEvent): TouchpadOuterClass.Action {
+        var action = TouchpadOuterClass.Action.NONE
+        when (e.action) {
+            MotionEvent.ACTION_DOWN -> action = TouchpadOuterClass.Action.DOWN
+            MotionEvent.ACTION_UP -> action = TouchpadOuterClass.Action.UP
+            MotionEvent.ACTION_MOVE -> action = TouchpadOuterClass.Action.MOVE
+        }
+        return action
     }
 
     private val localSender: Runnable = object : Runnable {
@@ -57,7 +94,7 @@ class UDPSender : Service() {
             while (threadRunning) {
                 val data = queue.poll()
                 if (data != null) {
-                    sendData = data.toString().toByteArray()
+                    sendData = data.toByteArray()
                     sendPacket = DatagramPacket(sendData,sendData.size,ip,port)
                     try {
                         clientSocket.send(sendPacket)
