@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+enum Action {
+    NONE = 0;
+    DOWN = 1;
+    UP = 2;
+    MOVE = 3;
+}
+
+message Touchpad {
+   Action action = 1;
+   repeated double x = 2;
+   repeated double y = 3;
+   int64 eventTime = 4;
+   int64 downTime = 5;
+}

@@ -1,27 +1,11 @@
 extern crate enigo;
 
+use super::touchpad::{Action, Touchpad};
 use std::fmt;
-use self::enigo::{Enigo, MouseControllable, MouseButton};
+use self::enigo::{Enigo, MouseButton};
 
 static LONG_TAP_TIMEOUT: i64 = 500;
 static DRAG_TIMEOUT: i64 = 500;
-
-#[derive(Debug, Copy, Clone)]
-enum Action {
-    NONE,
-    DOWN,
-    UP,
-    MOVE,
-}
-
-fn to_action(s: &str) -> Action {
-    match s {
-        "ACTION_DOWN" => Action::DOWN,
-        "ACTION_UP" => Action::UP,
-        "ACTION_MOVE" => Action::MOVE,
-        _ => Action::NONE,
-    }
-}
 
 #[derive(Debug, Copy, Clone)]
 pub struct MouseEvent {
@@ -57,46 +41,21 @@ pub fn new() -> MouseEvent {
     }
 
 impl MouseEvent {
-    pub fn act(&mut self, msg: String){
-        if msg.contains("MotionEvent") {
-            let s =  msg.replace("MotionEvent","")
-                .replace(" ","")
-                .replace("{","")
-                .replace("}","");
+    pub fn act(&mut self, msg: Touchpad, enigo: &mut Enigo){
 
-            let fields: Vec<&str> = s
-                .trim().split(',').collect();
+        self.paction = self.action; 
+        self.action = msg.action;
+        self.px = self.x; 
+        self.x = msg.x[0];
+        self.py = self.y; 
+        self.y = msg.y[0];
+        self.event_time = msg.eventTime;
+        self.down_time = msg.downTime;
 
-            for field in &fields {
-                let parts: Vec<&str> = field.split("=").collect();
-                match parts[0] {
-                    "action" => {
-                        self.paction = self.action; 
-                        self.action = to_action(parts[1]);
-                        },
-                    "x[0]" => {
-                        self.px = self.x; 
-                        self.x = parts[1].parse::<f64>().unwrap();
-                        },
-                    "y[0]" => {
-                        self.py = self.y; 
-                        self.y = parts[1].parse::<f64>().unwrap();
-                        },
-                    "eventTime" => {
-                        self.event_time = parts[1].parse::<i64>().unwrap();
-                        },
-                    "downTime" => {
-                        self.down_time = parts[1].parse::<i64>().unwrap();
-                        },
-                    _ => continue,
-                };
-            }
-            self._do();
-        }
+        self._do(enigo);
     }
     
-    fn _do(&mut self) {
-        let mut enigo = Enigo::new();
+    fn _do(&mut self, enigo: &mut Enigo) {
         self.dx = self.x - self.px;
         self.dy = self.y - self.py; 
         self.mul = (self.dx.powf(2.0) + self.dy.powf(2.0)).sqrt().ln() as i32;
@@ -142,7 +101,6 @@ impl MouseEvent {
                 }
             },
             _ => return,
-
         }
         return
     }

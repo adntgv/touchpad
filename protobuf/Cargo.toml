@@ -1,0 +1,7 @@
+[package]
+name = "protobuf"
+version = "0.1.0"
+authors = ["Aidyn_Torgayev <aidyn.torgayev@gmail.com>"]
+
+[dependencies]
+protobuf-codegen-pure = "2.3"

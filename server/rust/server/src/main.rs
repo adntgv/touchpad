@@ -1,14 +1,15 @@
 extern crate ctrlc;
 extern crate get_if_addrs;
+extern crate enigo;
 
 mod mouse; 
 use std::net::UdpSocket;
-use std::str;
 use std::thread;
 use std::sync::mpsc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::env;
+use enigo::Enigo;
 
 static PORT: i32 = 7000; 
 
@@ -43,13 +44,12 @@ fn main() {
         address = format!("{}:{}", address, PORT);
         println!("Starting server on {}", address);
         let socket = UdpSocket::bind(address).unwrap();
-        socket.set_nonblocking(true).unwrap();
         let mut buf = [0; 1024];
         loop {
             match socket.recv_from(&mut buf) {
                 Ok((amt, _src)) => {
-                    let msg = str::from_utf8(&buf).unwrap_or("");
-                    tx.send(msg[..amt].to_string()).unwrap();
+                    let touch: mouse::touchpad::Touchpad = protobuf::parse_from_bytes(&buf[..amt]).unwrap();
+                    tx.send(touch).unwrap();
                     },
                 Err(_e) => continue
             }
@@ -58,8 +58,9 @@ fn main() {
 
     thread::spawn(move || {
         let mut mouse = mouse::new_mouse_controller();
+        let mut enigo = Enigo::new();
         loop {
-            mouse.act(rx.recv().unwrap());
+            &mouse.act(rx.recv().unwrap(), &mut enigo);
         }
     });
 

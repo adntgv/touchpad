@@ -3,9 +3,9 @@ package com.example.aidyn_torgayev.touchpad
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_configure.*
+import java.net.NetworkInterface
 
 class Configure : AppCompatActivity() {
 
@@ -19,10 +19,22 @@ class Configure : AppCompatActivity() {
             bundle.putString("ip", val_ip.text.toString())
             bundle.putInt("port", val_port.text.toString().toInt())
 
-            val intent = Intent(this@Configure, Touchpad::class.java).apply {
+            val intent = Intent(this@Configure, TouchpadActivity::class.java).apply {
                 putExtra("data", bundle)
             }
             startActivity(intent)
         }
     }
+
+    fun findServer()  {
+        val enumNetworkInterfaces =  NetworkInterface.getNetworkInterfaces();
+        for (networkInterface in enumNetworkInterfaces) {
+            val enumInetAddress = networkInterface.inetAddresses;
+            for (inetAddress in enumInetAddress) {
+                val ipAddress = inetAddress.hostAddress;
+            }
+        }
+    }
+
+
 }
