@@ -1,16 +1,35 @@
 syntax = "proto3";
 
-enum Action {
+enum MessageType {
     NONE = 0;
-    DOWN = 1;
-    UP = 2;
-    MOVE = 3;
+    TOUCHPAD = 1;
+    ACCELEROMETER = 2;
+    BOTH = 3;
+}
+
+message Packet {
+    MessageType messageType = 1;
+    Touchpad touchpad = 2;
+    Accelerometer accelerometer = 3;
 }
 
 message Touchpad {
+    enum Action {
+        NONE = 0;
+        DOWN = 1;
+        UP = 2;
+        MOVE = 3;
+    }
    Action action = 1;
    repeated double x = 2;
    repeated double y = 3;
    int64 eventTime = 4;
    int64 downTime = 5;
+}
+
+message Accelerometer {
+    double acc_x = 1;
+    double acc_y = 2;
+    double acc_z = 3;
+    int32 rotation = 4;
 }

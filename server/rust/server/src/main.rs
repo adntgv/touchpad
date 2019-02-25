@@ -1,6 +1,7 @@
 extern crate ctrlc;
 extern crate get_if_addrs;
 extern crate enigo;
+extern crate protobuf;
 
 mod mouse; 
 use std::net::UdpSocket;
@@ -48,8 +49,11 @@ fn main() {
         loop {
             match socket.recv_from(&mut buf) {
                 Ok((amt, _src)) => {
-                    let touch: mouse::touchpad::Touchpad = protobuf::parse_from_bytes(&buf[..amt]).unwrap();
-                    tx.send(touch).unwrap();
+                    let pkt: mouse::touchpad::Packet = match protobuf::parse_from_bytes(&buf[..amt]){
+                        Ok(res) => {println!("{:?}", res ); res}
+                        Err(err) => {println!("Protobuf parse error: {:?}", err); mouse::touchpad::Packet::new()}
+                    };
+                    tx.send(pkt).unwrap();
                     },
                 Err(_e) => continue
             }
@@ -60,7 +64,8 @@ fn main() {
         let mut mouse = mouse::new_mouse_controller();
         let mut enigo = Enigo::new();
         loop {
-            &mouse.act(rx.recv().unwrap(), &mut enigo);
+            let pkt = rx.recv().unwrap();
+            &mouse.act(pkt, &mut enigo);
         }
     });
 

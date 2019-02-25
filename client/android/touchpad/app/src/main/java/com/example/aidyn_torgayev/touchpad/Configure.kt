@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.widget.Button
 import kotlinx.android.synthetic.main.activity_configure.*
 import java.net.NetworkInterface
+import java.util.*
+import com.stealthcopter.networktools.Ping
+import com.stealthcopter.networktools.ping.PingResult
+
+
 
 class Configure : AppCompatActivity() {
 
@@ -26,15 +31,7 @@ class Configure : AppCompatActivity() {
         }
     }
 
-    fun findServer()  {
-        val enumNetworkInterfaces =  NetworkInterface.getNetworkInterfaces();
-        for (networkInterface in enumNetworkInterfaces) {
-            val enumInetAddress = networkInterface.inetAddresses;
-            for (inetAddress in enumInetAddress) {
-                val ipAddress = inetAddress.hostAddress;
-            }
-        }
-    }
+
 
 
 }
